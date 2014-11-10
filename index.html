@@ -38,16 +38,9 @@
 					<div id="filters">
 						<div id="filterAccordion">
 							<h3>Cost</h3>
-							<div>
-								<div style="margin:0px 0px 10px 0px">Price Range:</div>
-								<div>
-									<div id="sliderMin" style="position:relative; top:-5px; float:left; width:10px;">0</div>
-									<div class="slider" style="position:relative; margin: 0px 5px 0px 10px; width:210px; float:left;"></div>
-									<div id="sliderMax" style="position:relative; top:-5px; float:left; width:10px;">10</div>
-								</div>
-							</div>
+							<div id="costPanel"></div>
 							<h3>Cuisine</h3>
-							<div>some cuisine stuff</div>
+							<div id="cuisinePanel"></div>
 							<h3>Location</h3>
 							<div>some location stuff</div>
 							<h3>Ratings</h3>
@@ -73,17 +66,44 @@
 			collapsible: true,
 			heightStyle: "content"
 		});
-		$(".slider").slider({
-			max: 30,
-			min: 5,
-			range: true,
-			step: 5,
-			values: [5, 20],
-			slide: function(event, ui){
-				$("#sliderMin").text(ui.values[0])
-				$("#sliderMax").text(ui.values[1])
-			}
-		});
+		makeCostWidget()
+		makeCuisineWidget()
+
+		function makeWidgetLabel(panel, label){
+			$("#" + panel).append('<div style="margin:0px 0px 10px 0px">' + label + ':</div>')
+		}
+
+		function makeCostWidget(){
+			makeWidgetLabel("costPanel", "Price Range")
+
+			// Make the div which will hold the min max labels and the slider
+			widgetDiv = $("#costPanel").append("<div></div>")
+			widgetDiv.append('<div id="sliderMin" style="position:relative; top:-5px; float:left; width:10px;">0</div>')
+			widgetDiv.append('<div class="slider" style="position:relative; margin: 0px 5px 0px 10px; width:210px; float:left;"></div>')
+			widgetDiv.append('<div id="sliderMax" style="position:relative; top:-5px; float:left; width:10px;">10</div>')
+				
+			$(".slider").slider({
+				max: 30,
+				min: 5,
+				range: true,
+				step: 5,
+				values: [5, 20],
+				slide: function(event, ui){
+					$("#sliderMin").text(ui.values[0])
+					$("#sliderMax").text(ui.values[1])
+				}
+			});
+		}
+
+		function makeCuisineWidget(){
+			makeWidgetLabel("cuisinePanel", "Cuisine Preference")
+
+			$("#cuisinePanel").append("<select style='width:100%; margin: 0px 0px 10px 0px'><option>type A</option><option>type B</option><option>type C</option></select>")
+			$("#cuisinePanel").append("<button type='button' style='width:100%;'>Add another cuisine type</button>")
+			$('#cuisinePanel > button').click(function(){
+				$(this).before("<select style='width:100%; margin: 0px 0px 10px 0px'><option>type A</option><option>type B</option><option>type C</option></select>")
+			})
+		}
 	</script>
 
 </body>
