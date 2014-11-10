@@ -1,0 +1,27 @@
+SKELETON - W11
+- all filter widgets done
+- map visually implemented (not necessarly responding to filters)
+- look into map plug-in to make drop-pins (javascript classes/functions of objects)
+	- dictionary (Key: unique("cross-streets"), Value: ourValue)
+	- autocomplete widget jQuery
+
+
+FILTERS
+- Search button
+- Start over button
+Cost
+Cuisine - Wagner
+Location - Mason
+Ratings - Mason
+Features - Mason
+
+MAP
+
+RESULTS
+
+BONUS
+CSS styling
+Browser sizing
+Search Bar
+Click on map to drop-pin a location
+Set up domain/server.
