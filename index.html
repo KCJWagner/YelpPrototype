@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="jquery-ui-1.11.2/external/jquery/jquery.js"></script>
+	<script src="jquery-ui-1.11.2/jquery-ui.js"></script>
+	<link href="jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+</head>
+<body>
+	<table style="width:100%; height:100%;">
+		<tr style="background-color:#f00;">
+			<td width="30%">
+				<h1>Yelp</h1>
+			</td>
+			<td>
+				Search: <input style="width:300px;" type="text">
+			</td>
+		</tr>
+		<tr>
+			<td width="30%" style="background-color:#0f0;">
+				<div id="tabs">
+					<ul>
+						<li><a href="#filters">Filters</a></li>
+						<li><a href="#results">Results</a></li>
+					</ul>
+					<div id="filters">Big list of filters</div>
+					<div id="results">Big list of results</div>
+				</div>
+			</td>
+			<td style="background-color:#00f;">
+				<div>
+					
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<script>
+		$("#tabs").tabs();
+	</script>
+
+<!--
+	<div style="width:100%; height:100px; background-color:#f00;">
+		<h1 style="top:30px; left:10px;">Yelp</h1>
+		<div style="position:absolute; top:40px; left:300px;">
+			Search: <input style="width:300px;" type="text">
+		</div>
+	</div>
+
+	<div id="tabs" style="position:absolute; top:100px; bottom:0px; width:30%; background-color:#0f0;">
+		<ul>
+			<li><a href="#filters">First</a></li>
+			<li><a href="#results">Second</a></li>
+		</ul>
+		<div id="filters" style="height:100%">Big list of filters</div>
+		<div id="results" style="height:100%">Big list of results</div>
+	</div>
+	<div style="position:absolute; left:30%; right:0%; top:100px; bottom:0px; background-color:#00f;">
+		
+	</div>
+
+	<script>
+		$("#tabs").tabs();
+	</script>
+-->
+</body>
+</html>
