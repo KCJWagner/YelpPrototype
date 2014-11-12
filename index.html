@@ -4,12 +4,16 @@
 	<script src="jquery-ui-1.11.2/external/jquery/jquery.js"></script>
 	<script src="jquery-ui-1.11.2/jquery-ui.js"></script>
 	<script src="tag-it/js/tag-it.min.js"></script>
+
+
 	<link href="jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
 	<link href="tag-it/css/jquery.tagit.css" rel="stylesheet" type="text/css">
     <link href="tag-it/css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
 	<style>
 		html, body {
 			height:100%;
+			width:100%;
+			margin:0px;
 		}
 
 		#filterAccordion > div {
@@ -23,7 +27,7 @@
 </head>
 <body>
 	<table id="PageLayout" style="width:100%; height:100%;">
-		<tr height="15%" style="background-color:#f00;">
+		<tr height="15%">
 			<td width="300px">
 				<h1>Yelp</h1>
 			</td>
@@ -32,7 +36,7 @@
 			</td>
 		</tr>
 		<tr height="85%">
-			<td width="300px" style="background-color:#0f0;">
+			<td width="300px">
 				<div id="tabs" style="height:100%;">
 					<ul>
 						<li><a href="#filters">Filters</a></li>
@@ -55,15 +59,28 @@
 					<div id="results">Big list of results</div>
 				</div>
 			</td>
-			<td style="background-color:#00f;">
-				<div>
-					
+			<td>
+				<div style="width:100%; height:100%;">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d83358.60984702894!2d-123.15089349716797!3d49.23931284111058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sgoogle+maps!5e0!3m2!1sen!2sca!4v1415819074712" frameborder="0" style="border:0; position:absolute;"></iframe>
+					<svg height="100" width="100" style="position:absolute;">
+						<circle fill-opacity="0.5" cx="50" cy="50" r="40" stroke="black" stroke-width="1" fill="red" />
+					</svg>
 				</div>
 			</td>
 		</tr>
 	</table>
 
 	<script>
+		// Set up the map size
+		$( document ).ready(function() {
+			$("iframe").css("width", $("iframe").parent().width())
+			$("iframe").css("height", $("iframe").parent().height())
+		});
+		$(window).resize(function(){
+			$("iframe").css("width", $("iframe").parent().width())
+			$("iframe").css("height", $("iframe").parent().height())
+		});
+
 		$("#tabs").tabs();
 		$("#filterAccordion").accordion({
 			collapsible: true,
