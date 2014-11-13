@@ -9,9 +9,13 @@ SKELETON - W11
 FILTERS
 - Search button
 - Start over button
+Location - Mason
+ - autocomplete box & slider for radius
+ - nothing entered: no circle
+ - once you apply location filter => circle shows up w/ dots in circle
+ - then when we apply other filters, the drop-pins in the circle start to disappear
 Cost
 Cuisine - Wagner
-Location - Mason
 Ratings - Mason
 Features - Mason
 
