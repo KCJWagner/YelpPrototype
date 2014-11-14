@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<script src="jquery-ui-1.11.2/external/jquery/jquery.js"></script>
 	<script src="jquery-ui-1.11.2/jquery-ui.js"></script>
 	<script src="tag-it/js/tag-it.min.js"></script>
-
+	
+	<!--for CheckBoxes-->
+	<script src="jquery-1.11.0.min.js"></script>
+	<script src="fm.checkator.jquery.js"></script>
+	<link rel="stylesheet" href="fm.checkator.jquery.css"/>
 
 	<link href="jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
 	<link href="tag-it/css/jquery.tagit.css" rel="stylesheet" type="text/css">
     <link href="tag-it/css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+
+    <!--for Location-->
+	<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+	<script src="js/jquery-ui-slider-pips.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui-slider-pips.css">
+
+	
 	<style>
 		html, body {
 			height:100%;
@@ -45,15 +57,33 @@
 					<div id="filters">
 						<div id="filterAccordion">
 							<h3>Location</h3>
-							<div>some location stuff</div>
+							<div id="locationPanel"></div>
 							<h3>Cost</h3>
 							<div id="costPanel"></div>
 							<h3>Cuisine</h3>
 							<div id="cuisinePanel"></div>
 							<h3>Ratings</h3>
-							<div>some rating stuff</div>
+							<div id="ratingsPanel">
+								<legend>Customer Ratings</legend>
+								<input type="checkbox" class="checkbox2"> <label>5 stars</label><br>
+								<input type="checkbox" class="checkbox2"> <label>4 stars</label><br>
+								<input type="checkbox" class="checkbox2"> <label>3 stars</label><br>
+								<input type="checkbox" class="checkbox2"> <label>2 stars</label><br>
+								<input type="checkbox" class="checkbox2"> <label>1 star</label><br>
+							</div>
 							<h3>Features</h3>
-							<div>some features stuff</div>
+							<div id="featuresPanel">
+								<legend>Restaurant Features</legend>
+								<input type="checkbox" class="checkbox1"> <label>Accepts debit/credit</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Delivery</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Takes Reservations</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Wheelchair Accessible</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Good for Kids</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Good for Groups</label><br>
+								<input type="checkbox" class="checkbox1"> <label>19+ Only</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Fast Food</label><br>
+								<input type="checkbox" class="checkbox1"> <label>Organic/Locally Grown</label><br>
+							</div>
 						</div>
 					</div>
 					<div id="results">Big list of results</div>
@@ -104,25 +134,30 @@
 			collapsible: true,
 			heightStyle: "content"
 		});
+		makeLocationSearchWidget()
+		//makeLocationRadiusWidget()
 		makeCostWidget()
 		makeCuisineWidget()
+		makeRatingsWidget()
+
+
 
 		function makeWidgetLabel(panel, label){
-			$("#" + panel).append('<div style="margin:0px 0px 10px 0px">' + label + ':</div>')
+			$("#" + panel).append('<div style="margin:0px 0px 10px 0px">' + label + '</div>')
 		}
 
 		function makeCostWidget(){
-			makeWidgetLabel("costPanel", "Price Range")
+			makeWidgetLabel("costPanel", "Average Price of Main Plate")
 
 			// Make the div which will hold the min max labels and the slider
 			var widgetDiv = $("#costPanel").append("<div></div>")
 			widgetDiv.append('<div id="sliderMin" style="position:relative; top:-5px; float:left; width:10px;">5</div>')
 			widgetDiv.append('<div class="slider" style="position:relative; margin: 0px 5px 0px 10px; width:210px; float:left;"></div>')
-			widgetDiv.append('<div id="sliderMax" style="position:relative; top:-5px; float:left; width:10px;">10</div>')
+			widgetDiv.append('<div id="sliderMax" style="position:relative; top:-5px; float:left; width:10px;">20</div>')
 				
 			$(".slider").slider({
 				max: 30,
-				min: 5,
+				min: 0,
 				range: true,
 				step: 5,
 				values: [5, 20],
@@ -131,12 +166,12 @@
 					$("#sliderMax").text(ui.values[1])
 				}
 			});
-		}
+		};
 
 		function makeCuisineWidget(){
 			makeWidgetLabel("cuisinePanel", "Cuisine Preference")
 
-			var options = ["Chinese", "Mexican", "Indian", "Japanese", "French"]
+			var options = ["Chinese", "Mexican", "Indian", "Japanese", "French", "Italian"]
 			$("#cuisinePanel").append("<ul></ul>")
 			$("#cuisinePanel > ul").tagit({
 				availableTags: options,
@@ -149,7 +184,56 @@
 					}
 				}
 			})
+		};
+
+		function makeLocationSearchWidget() {
+			makeWidgetLabel("locationPanel", "Where do you want to eat?")
+
+			//search bar
+			var options = ["UBC", "Point Grey", "Kitsilano", "Dunbar", "Arbutus", "Kerrisdale"]
+			$("#locationPanel").append("<ul></ul>")
+			$("#locationPanel > ul").tagit({
+				availableTags: options,
+				autocomplete: {delay: 0, minLength: 1, autoFocus: true},
+				beforeTagAdded: function(event, ui){
+					if (options.indexOf(ui.tagLabel) != -1){
+						return true
+					}else{
+						return false
+					}
+				}
+			});
+		};
+
+		function makeLocationRadiusWidget() {
+			//radius slider bar
+			makeWidgetLabel("locationPanel", "Distance from Restaurant")
+			var widgetDiv = $("#locationPanel").append("<ul></ul>")
+
+			widgetDiv.append('<div class="sliderL" style="position:relative; margin: 0px 5px 0px 10px; width:210px; float:left;"></div>')
+
+			$(".sliderL").slider({
+				max: 30,
+				value: 15,
+				steps: 5
+				
+			});
+			$(".sliderL").slider('pips');
+			$(".sliderL").slider('float', {pips: true} );
 		}
+			
+				
+
+		function makeRatingsWidget(){
+			//makeWidgetLabel("ratingsPanel", "Customer Ratings")
+
+			//$('.checkbox2').checkator();
+
+			// 5, 4, 3, 2, 1 star options
+			// options as check boxes
+		};
+
+
 	</script>
 
 </body>
