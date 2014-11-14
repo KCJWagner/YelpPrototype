@@ -140,10 +140,7 @@
 			makeWidgetLabel("costPanel", "Average Price of Main Plate")
 
 			// Make the div which will hold the min max labels and the slider
-			var widgetDiv = $("#costPanel").append("<div></div>")
-			widgetDiv.append('<div id="sliderMin" style="position:relative; top:-5px; float:left; width:10px;">5</div>')
-			widgetDiv.append('<div class="slider" style="position:relative; margin: 0px 5px 0px 10px; width:210px; float:left;"></div>')
-			widgetDiv.append('<div id="sliderMax" style="position:relative; top:-5px; float:left; width:10px;">20</div>')
+			$("#costPanel").append('<div class="slider" style="margin: 0px 5px 20px 10px;"></div>')
 				
 			$(".slider").slider({
 				max: 30,
@@ -156,6 +153,8 @@
 					$("#sliderMax").text(ui.values[1])
 				}
 			});
+			$(".slider").slider('pips');
+			$(".slider").slider('float');
 		};
 
 		function makeCuisineWidget(){
