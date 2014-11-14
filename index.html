@@ -120,18 +120,17 @@
 			beingDragged = false
 		})
 
-		$("#tabs").tabs();
-		$("#filterAccordion").accordion({
-			collapsible: true,
-			heightStyle: "content"
-		});
 		makeLocationSearchWidget()
 		makeLocationRadiusWidget()
 		makeCostWidget()
 		makeCuisineWidget()
 		makeRatingsWidget()
 
-
+		$("#tabs").tabs();
+		$("#filterAccordion").accordion({
+			collapsible: true,
+			heightStyle: "content"
+		});
 
 		function makeWidgetLabel(panel, label){
 			$("#" + panel).append('<div style="margin:0px 0px 10px 0px">' + label + '</div>')
@@ -200,8 +199,7 @@
 			//radius slider bar
 			makeWidgetLabel("locationPanel", "Distance from Restaurant")
 
-			var widgetDiv = $("#locationPanel").append("<div></div>")
-			widgetDiv.append('<div class="sliderL" style="margin: 0px 5px 0px 10px;"></div>')
+			$("#locationPanel").append('<div class="sliderL" style="margin: 0px 5px 20px 10px;"></div>')
 
 			$(".sliderL").slider({
 				max: 30,
@@ -210,7 +208,7 @@
 				
 			});
 			$(".sliderL").slider('pips');
-			$(".sliderL").slider('float', {pips: true} );
+			$(".sliderL").slider('float');
 		}
 			
 				
