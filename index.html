@@ -101,7 +101,9 @@
 			$("img").css("height", $("img").parent().height())
 			$("svg").css("width", $("svg").parent().width())
 			$("svg").css("height", $("svg").parent().height())
+			makeDataPoints()
 		});
+
 		$(window).resize(function(){
 			$("img").css("width", $("img").parent().width())
 			$("img").css("height", $("img").parent().height())
@@ -118,8 +120,26 @@
 			offsetX = event.offsetX + $("#radius").position().left
 			offsetY = event.offsetY + $("#radius").position().top
 			if (beingDragged){
+				// Move the actualy circle
 				$("#radius").attr('cx', event.offsetX)
 				$("#radius").attr('cy', event.offsetY)
+
+				// Check to see what restaurants are in the circle
+				d3.selectAll(".restaurant").each(function(){
+					var circle = d3.select(this)
+					var dist = Math.sqrt(Math.pow(circle.attr("cx") - event.offsetX, 2) + Math.pow(circle.attr("cy") - event.offsetY, 2))
+					if (dist < 40){
+						// show
+						circle
+							.attr("fill-opacity", "1")
+							.attr("stroke-width", "1")
+					}else{
+						// hide
+						circle
+							.attr("fill-opacity", "0")
+							.attr("stroke-width", "0")
+					}
+				})
 			}
 		})
 		$('body').mouseup(function(event){
@@ -136,7 +156,6 @@
 			collapsible: true,
 			heightStyle: "content"
 		});
-		makeDataPoints()
 
 		function makeDataPoints(){
 			// Generate data
@@ -162,6 +181,8 @@
 				}
 			}
 
+			var SVGWidthSteps = $("svg").width() / 100
+			var SVGHeightSteps = $("svg").height() / 100
 			d3.select("svg")
 				.selectAll("circle")
 					.data(restaurants)
@@ -169,10 +190,10 @@
 				.attr("class", "restaurant")
 				.attr("fill-opacity", "1")
 				.attr("cx", function (d){
-					return d["Location"][0] + "%"
+					return SVGWidthSteps * d["Location"][0]
 				})
 				.attr("cy", function (d){
-					return d["Location"][1] + "%"
+					return  SVGHeightSteps * d["Location"][1]
 				})
 				.attr("r", "1")
 				.attr("stroke", "red")
