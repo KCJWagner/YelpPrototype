@@ -5,6 +5,7 @@
 	<script src="jquery-ui-1.11.2/jquery-ui.js"></script>
 	<script src="tag-it/js/tag-it.min.js"></script>
 	<script src="jQuery-ui-Slider-Pips-master/src/js/jquery-ui-slider-pips.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
 	<link href="jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
 	<link href="tag-it/css/jquery.tagit.css" rel="stylesheet" type="text/css">
@@ -82,9 +83,9 @@
 			</td>
 			<td>
 				<div style="width:100%; height:100%;">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d83358.60984702894!2d-123.15089349716797!3d49.23931284111058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sgoogle+maps!5e0!3m2!1sen!2sca!4v1415819074712" frameborder="0" style="border:0; position:absolute;"></iframe>
-					<svg height="100" width="100" style="position:absolute;">
-						<circle fill-opacity="0" cx="50%" cy="50%" r="40" stroke="red" stroke-width="1" fill="red" style="cursor:move;"/>
+					<img src="MapPic.png" style="border:0; position:absolute;">
+					<svg style="position:absolute;">
+						<circle id="radius" fill-opacity="0" cx="50%" cy="50%" r="40" stroke="red" stroke-width="1" fill="red" style="cursor:move;"/>
 					</svg>
 				</div>
 			</td>
@@ -94,26 +95,29 @@
 	<script>
 		// Set up the map size
 		$( document ).ready(function() {
-			$("iframe").css("width", $("iframe").parent().width())
-			$("iframe").css("height", $("iframe").parent().height())
+			$("img").css("width", $("img").parent().width())
+			$("img").css("height", $("img").parent().height())
+			$("svg").css("width", $("svg").parent().width())
+			$("svg").css("height", $("svg").parent().height())
 		});
 		$(window).resize(function(){
-			$("iframe").css("width", $("iframe").parent().width())
-			$("iframe").css("height", $("iframe").parent().height())
+			$("img").css("width", $("img").parent().width())
+			$("img").css("height", $("img").parent().height())
+			$("img").css("width", $("svg").parent().width())
+			$("img").css("height", $("svg").parent().height())
 		});
 
 		// Set up the circle events
 		var beingDragged = false
-		$('circle:last').mousedown(function(event){
+		$('#radius').mousedown(function(event){
 			beingDragged = true
 		})
 		$('svg').mousemove(function(event){
-			offsetX = event.offsetX + $("svg").position().left
-			offsetY = event.offsetY + $("svg").position().top
-			circleRadius = $("svg").css('width').replace("px", "")/2
-			if (beingDragged && offsetX - circleRadius > $("svg").parent().position().left && offsetY - circleRadius > $("svg").parent().position().top){
-				$("svg").css('left', offsetX - circleRadius)
-				$("svg").css('top', offsetY - circleRadius)
+			offsetX = event.offsetX + $("#radius").position().left
+			offsetY = event.offsetY + $("#radius").position().top
+			if (beingDragged){
+				$("#radius").attr('cx', event.offsetX)
+				$("#radius").attr('cy', event.offsetY)
 			}
 		})
 		$('body').mouseup(function(event){
@@ -125,12 +129,55 @@
 		makeCostWidget()
 		makeCuisineWidget()
 		makeRatingsWidget()
-
 		$("#tabs").tabs();
 		$("#filterAccordion").accordion({
 			collapsible: true,
 			heightStyle: "content"
 		});
+		makeDataPoints()
+
+		function makeDataPoints(){
+			// Generate data
+			var restaurants = []
+			var CuisineTypes = ["Indian, Chinese, Japanese, Sushu, Pizza, Italian, French"]
+			for (i=0; i<100; i++){
+				for (j=0; j<100; j++){
+					var restaurant = {}
+					restaurant["Cost"] = (i*100 + j) % 40
+					restaurant["Location"] = [i, j]
+					restaurant["Cuisine"] = CuisineTypes[(i*100 + j) % CuisineTypes.length]
+					restaurant["Rating"] = ((i*100 + j) % 5) + 1
+					restaurant["Features"] = {}
+					restaurant["Features"]["Card"] = (i*100 + j) % 9 == 0 ? true : false
+					restaurant["Features"]["Delivery"] = (i*100 + j) % 9 == 1 ? true : false
+					restaurant["Features"]["Reservation"] = (i*100 + j) % 9 == 2 ? true : false
+					restaurant["Features"]["Wheelchair"] = (i*100 + j) % 9 == 3 ? true : false
+					restaurant["Features"]["Kids"] = (i*100 + j) % 9 == 4 ? true : false
+					restaurant["Features"]["Group"] = (i*100 + j) % 9 == 5 ? true : false
+					restaurant["Features"]["19+"] = (i*100 + j) % 9 == 6 ? true : false
+					restaurant["Features"]["Fast"] = (i*100 + j) % 9 == 7 ? true : false
+					restaurant["Features"]["Organic"] = (i*100 + j) % 9 == 8 ? true : false
+					restaurants.push(restaurant)
+				}
+			}
+
+			d3.select("svg")
+				.selectAll("circle")
+					.data(restaurants)
+				.enter().append("circle")
+				.attr("fill-opacity", "1")
+				.attr("cx", function (d){
+					return d["Location"][0] + "%"
+				})
+				.attr("cy", function (d){
+					return d["Location"][1] + "%"
+				})
+				.attr("r", "1")
+				.attr("stroke", "red")
+				.attr("stroke-width", "1")
+				.attr("fill", "red")
+				.attr("attributes", function (d) { return d })
+		}
 
 		function makeWidgetLabel(panel, label){
 			$("#" + panel).append('<div style="margin:0px 0px 10px 0px">' + label + '</div>')
