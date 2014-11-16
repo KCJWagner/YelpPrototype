@@ -93,6 +93,7 @@
 
 	<script>
 		var restaurants = []
+		var CuisineTypes = ["Indian", "Chinese", "Japanese", "Sushi", "Pizza", "Italian", "French", "Mexican"]
 
 		// Set up the map size
 		$( document ).ready(function() {
@@ -160,7 +161,6 @@
 
 		function generateData(){
 			// Generate data
-			var CuisineTypes = ["Indian, Chinese, Japanese, Sushu, Pizza, Italian, French"]
 			for (i=0; i<100; i++){
 				for (j=0; j<100; j++){
 					var restaurant = {}
@@ -191,6 +191,7 @@
 			var radiusCircleY = radiusCircle.attr("cy")
 			var radiusCircleR = radiusCircle.attr("r")
 			var priceRange = $(".slider").slider("values")
+			var desiredCuisines = $("#cuisinePanel > ul").tagit("assignedTags")
 			d3.select("svg")
 				.selectAll(".restaurant")
 					.data(restaurants)
@@ -207,6 +208,11 @@
 
 					// Check if it is in the right price range
 					if (d["Cost"] < priceRange[0] || d["Cost"] > priceRange[1]){
+						return "0"
+					}
+
+					// Check if it is the right type of cuisine
+					if (desiredCuisines.indexOf(d["Cuisine"]) == -1 && desiredCuisines.length != 0){
 						return "0"
 					}
 
@@ -232,6 +238,7 @@
 			var radiusCircleY = radiusCircle.attr("cy")
 			var radiusCircleR = radiusCircle.attr("r")
 			var priceRange = priceRange ? priceRange : $(".slider").slider("values")
+			var desiredCuisines = $("#cuisinePanel > ul").tagit("assignedTags")
 			d3.selectAll(".restaurant")
 				.data(restaurants)
 				.attr("fill-opacity", function(d){
@@ -245,6 +252,11 @@
 
 					// Check if it is in the right price range
 					if (d["Cost"] < priceRange[0] || d["Cost"] > priceRange[1]){
+						return "0"
+					}
+
+					// Check if it is the right type of cuisine
+					if (desiredCuisines.indexOf(d["Cuisine"]) == -1 && desiredCuisines.length != 0){
 						return "0"
 					}
 
@@ -279,17 +291,19 @@
 		function makeCuisineWidget(){
 			makeWidgetLabel("cuisinePanel", "Cuisine Preference")
 
-			var options = ["Chinese", "Mexican", "Indian", "Japanese", "French", "Italian"]
 			$("#cuisinePanel").append("<ul></ul>")
 			$("#cuisinePanel > ul").tagit({
-				availableTags: options,
+				availableTags: CuisineTypes,
 				autocomplete: {delay: 0, minLength: 1, autoFocus: true},
 				beforeTagAdded: function(event, ui){
-					if (options.indexOf(ui.tagLabel) != -1){
+					if (CuisineTypes.indexOf(ui.tagLabel) != -1){
 						return true
 					}else{
 						return false
 					}
+				},
+				afterTagAdded: function(){
+					filterDataPoits()
 				}
 			})
 		};
