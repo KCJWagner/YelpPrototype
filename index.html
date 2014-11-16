@@ -93,6 +93,8 @@
 	</table>
 
 	<script>
+		var restaurants = []
+
 		// Set up the map size
 		$( document ).ready(function() {
 			$("img").css("width", $("img").parent().width())
@@ -138,7 +140,6 @@
 
 		function makeDataPoints(){
 			// Generate data
-			var restaurants = []
 			var CuisineTypes = ["Indian, Chinese, Japanese, Sushu, Pizza, Italian, French"]
 			for (i=0; i<100; i++){
 				for (j=0; j<100; j++){
@@ -177,7 +178,6 @@
 				.attr("stroke", "red")
 				.attr("stroke-width", "1")
 				.attr("fill", "red")
-				.attr("attributes", function (d) { return d })
 		}
 
 		function makeWidgetLabel(panel, label){
