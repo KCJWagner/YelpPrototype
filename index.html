@@ -165,6 +165,7 @@
 				.selectAll("circle")
 					.data(restaurants)
 				.enter().append("circle")
+				.attr("class", "restaurant")
 				.attr("fill-opacity", "1")
 				.attr("cx", function (d){
 					return d["Location"][0] + "%"
