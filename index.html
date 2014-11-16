@@ -85,7 +85,6 @@
 				<div style="width:100%; height:100%;">
 					<img src="MapPic.png" style="border:0; position:absolute;">
 					<svg style="position:absolute;">
-						<circle id="radius" fill-opacity="0" cx="50%" cy="50%" r="40" stroke="red" stroke-width="1" fill="red" style="cursor:move;"/>
 					</svg>
 				</div>
 			</td>
@@ -101,6 +100,8 @@
 			$("img").css("height", $("img").parent().height())
 			$("svg").css("width", $("svg").parent().width())
 			$("svg").css("height", $("svg").parent().height())
+			makeRadiusCircle()
+			generateData()
 			makeDataPoints()
 		});
 
@@ -110,41 +111,6 @@
 			$("img").css("width", $("svg").parent().width())
 			$("img").css("height", $("svg").parent().height())
 		});
-
-		// Set up the circle events
-		var beingDragged = false
-		$('#radius').mousedown(function(event){
-			beingDragged = true
-		})
-		$('svg').mousemove(function(event){
-			offsetX = event.offsetX + $("#radius").position().left
-			offsetY = event.offsetY + $("#radius").position().top
-			if (beingDragged){
-				// Move the actualy circle
-				$("#radius").attr('cx', event.offsetX)
-				$("#radius").attr('cy', event.offsetY)
-
-				// Check to see what restaurants are in the circle
-				d3.selectAll(".restaurant").each(function(){
-					var circle = d3.select(this)
-					var dist = Math.sqrt(Math.pow(circle.attr("cx") - event.offsetX, 2) + Math.pow(circle.attr("cy") - event.offsetY, 2))
-					if (dist < 40){
-						// show
-						circle
-							.attr("fill-opacity", "1")
-							.attr("stroke-width", "1")
-					}else{
-						// hide
-						circle
-							.attr("fill-opacity", "0")
-							.attr("stroke-width", "0")
-					}
-				})
-			}
-		})
-		$('body').mouseup(function(event){
-			beingDragged = false
-		})
 
 		makeLocationSearchWidget()
 		makeLocationRadiusWidget()
@@ -157,7 +123,42 @@
 			heightStyle: "content"
 		});
 
-		function makeDataPoints(){
+		function makeRadiusCircle(){
+			d3.select("svg").append("circle")
+				.attr("id", "radius")
+				.attr("fill-opacity", "0")
+				.attr("cx", "100")
+				.attr("cy", "100")
+				.attr("r", "40")
+				.attr("stroke", "red")
+				.attr("stroke-width", "1")
+				.attr("fill", "red")
+				.style("cursor", "move")
+				.style("z-index", "1")
+
+			// Set up the circle events
+			var beingDragged = false
+			$('#radius').mousedown(function(event){
+				beingDragged = true
+			})
+			$('svg').mousemove(function(event){
+				offsetX = event.offsetX + $("#radius").position().left
+				offsetY = event.offsetY + $("#radius").position().top
+				if (beingDragged){
+					// Move the actualy circle
+					$("#radius").attr('cx', event.offsetX)
+					$("#radius").attr('cy', event.offsetY)
+
+					// Check to see what restaurants are in the circle
+					filterDataPoits()
+				}
+			})
+			$('body').mouseup(function(event){
+				beingDragged = false
+			})
+		}
+
+		function generateData(){
 			// Generate data
 			var CuisineTypes = ["Indian, Chinese, Japanese, Sushu, Pizza, Italian, French"]
 			for (i=0; i<100; i++){
@@ -180,15 +181,37 @@
 					restaurants.push(restaurant)
 				}
 			}
+		}
 
+		function makeDataPoints(){
 			var SVGWidthSteps = $("svg").width() / 100
 			var SVGHeightSteps = $("svg").height() / 100
+			var radiusCircle = d3.select("#radius")
+			var radiusCircleX = radiusCircle.attr("cx")
+			var radiusCircleY = radiusCircle.attr("cy")
+			var radiusCircleR = radiusCircle.attr("r")
+			var priceRange = $(".slider").slider("values")
 			d3.select("svg")
-				.selectAll("circle")
+				.selectAll(".restaurant")
 					.data(restaurants)
 				.enter().append("circle")
 				.attr("class", "restaurant")
-				.attr("fill-opacity", "1")
+				.attr("fill-opacity", function(d){
+					// Check if it is in the radius
+					var delX = radiusCircleX - SVGWidthSteps * d["Location"][0]
+					var delY = radiusCircleY - SVGHeightSteps * d["Location"][1]
+					var dist = Math.sqrt(Math.pow(delX, 2) + Math.pow(delY, 2))
+					if (dist >= radiusCircleR){
+						return "0"
+					}
+
+					// Check if it is in the right price range
+					if (d["Cost"] < priceRange[0] || d["Cost"] > priceRange[1]){
+						return "0"
+					}
+
+					return "1"
+				})
 				.attr("cx", function (d){
 					return SVGWidthSteps * d["Location"][0]
 				})
@@ -197,8 +220,36 @@
 				})
 				.attr("r", "1")
 				.attr("stroke", "red")
-				.attr("stroke-width", "1")
+				.attr("stroke-width", "0")
 				.attr("fill", "red")
+		}
+
+		function filterDataPoits(priceRange){
+			var SVGWidthSteps = $("svg").width() / 100
+			var SVGHeightSteps = $("svg").height() / 100
+			var radiusCircle = d3.select("#radius")
+			var radiusCircleX = radiusCircle.attr("cx")
+			var radiusCircleY = radiusCircle.attr("cy")
+			var radiusCircleR = radiusCircle.attr("r")
+			var priceRange = priceRange ? priceRange : $(".slider").slider("values")
+			d3.selectAll(".restaurant")
+				.data(restaurants)
+				.attr("fill-opacity", function(d){
+					// Check if it is in the radius
+					var delX = radiusCircleX - SVGWidthSteps * d["Location"][0]
+					var delY = radiusCircleY - SVGHeightSteps * d["Location"][1]
+					var dist = Math.sqrt(Math.pow(delX, 2) + Math.pow(delY, 2))
+					if (dist >= radiusCircleR){
+						return "0"
+					}
+
+					// Check if it is in the right price range
+					if (d["Cost"] < priceRange[0] || d["Cost"] > priceRange[1]){
+						return "0"
+					}
+
+					return "1"
+				})
 		}
 
 		function makeWidgetLabel(panel, label){
@@ -212,14 +263,13 @@
 			$("#costPanel").append('<div class="slider" style="margin: 0px 5px 20px 10px;"></div>')
 				
 			$(".slider").slider({
-				max: 30,
+				max: 40,
 				min: 0,
 				range: true,
 				step: 5,
 				values: [5, 20],
 				slide: function(event, ui){
-					$("#sliderMin").text(ui.values[0])
-					$("#sliderMax").text(ui.values[1])
+					filterDataPoits(ui.values)
 				}
 			});
 			$(".slider").slider('pips');
