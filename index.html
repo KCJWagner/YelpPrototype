@@ -351,17 +351,29 @@
 			makeWidgetLabel("locationPanel", "Where do you want to eat?")
 
 			//search bar
-			var options = ["UBC", "Point Grey", "Kitsilano", "Dunbar", "Arbutus", "Kerrisdale"]
+			var locations = {"UBC" : [100, 100], 
+							"Point Grey" : [400, 225], 
+							"Kitsilano" : [410, 40], 
+							"Dunbar" : [325, 125], 
+							"Arbutus" : [410, 120], 
+							"Kerrisdale": [400, 225]}
+			var options = Object.keys(locations)
 			$("#locationPanel").append("<ul></ul>")
 			$("#locationPanel > ul").tagit({
 				availableTags: options,
 				autocomplete: {delay: 0, minLength: 1, autoFocus: true},
+				tagLimit: 1,
 				beforeTagAdded: function(event, ui){
 					if (options.indexOf(ui.tagLabel) != -1){
 						return true
 					}else{
 						return false
 					}
+				},
+				afterTagAdded: function(event, ui){
+					d3.select("#radius").attr("cx", locations[ui.tagLabel][0])
+					d3.select("#radius").attr("cy", locations[ui.tagLabel][1])
+					filterDataPoits()
 				}
 			});
 		};
