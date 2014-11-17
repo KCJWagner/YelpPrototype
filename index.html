@@ -55,14 +55,7 @@
 							<h3>Cuisine</h3>
 							<div id="cuisinePanel"></div>
 							<h3>Ratings</h3>
-							<div id="ratingsPanel">
-								<legend>Customer Ratings</legend>
-								<input type="checkbox" class="checkbox2"> <label>5 stars</label><br>
-								<input type="checkbox" class="checkbox2"> <label>4 stars</label><br>
-								<input type="checkbox" class="checkbox2"> <label>3 stars</label><br>
-								<input type="checkbox" class="checkbox2"> <label>2 stars</label><br>
-								<input type="checkbox" class="checkbox2"> <label>1 star</label><br>
-							</div>
+							<div id="ratingsPanel"></div>
 							<h3>Features</h3>
 							<div id="featuresPanel">
 								<legend>Restaurant Features</legend>
@@ -192,6 +185,7 @@
 			var radiusCircleR = radiusCircle.attr("r")
 			var priceRange = $(".slider").slider("values")
 			var desiredCuisines = $("#cuisinePanel > ul").tagit("assignedTags")
+			var desiredRating = {"1" : $("#ratingsPanel > input:eq(4)").is(":checked"), "2" : $("#ratingsPanel > input:eq(3)").is(":checked"), "3" : $("#ratingsPanel > input:eq(2)").is(":checked"), "4" : $("#ratingsPanel > input:eq(1)").is(":checked"), "5" : $("#ratingsPanel > input:eq(0)").is(":checked")}
 			d3.select("svg")
 				.selectAll(".restaurant")
 					.data(restaurants)
@@ -213,6 +207,11 @@
 
 					// Check if it is the right type of cuisine
 					if (desiredCuisines.indexOf(d["Cuisine"]) == -1 && desiredCuisines.length != 0){
+						return "0"
+					}
+
+					// Check if it has the right amount of stars
+					if (!desiredRating[d["Rating"]]){
 						return "0"
 					}
 
@@ -239,6 +238,7 @@
 			var radiusCircleR = radiusCircle.attr("r")
 			var priceRange = priceRange ? priceRange : $(".slider").slider("values")
 			var desiredCuisines = $("#cuisinePanel > ul").tagit("assignedTags")
+			var desiredRating = {"1" : $("#ratingsPanel > input:eq(4)").is(":checked"), "2" : $("#ratingsPanel > input:eq(3)").is(":checked"), "3" : $("#ratingsPanel > input:eq(2)").is(":checked"), "4" : $("#ratingsPanel > input:eq(1)").is(":checked"), "5" : $("#ratingsPanel > input:eq(0)").is(":checked")}
 			d3.selectAll(".restaurant")
 				.data(restaurants)
 				.attr("fill-opacity", function(d){
@@ -257,6 +257,11 @@
 
 					// Check if it is the right type of cuisine
 					if (desiredCuisines.indexOf(d["Cuisine"]) == -1 && desiredCuisines.length != 0){
+						return "0"
+					}
+
+					// Check if it has the right amount of stars
+					if (!desiredRating[d["Rating"]]){
 						return "0"
 					}
 
@@ -346,12 +351,19 @@
 				
 
 		function makeRatingsWidget(){
-			//makeWidgetLabel("ratingsPanel", "Customer Ratings")
-
-			//$('.checkbox2').checkator();
+			makeWidgetLabel("ratingsPanel", "Customer Ratings")
 
 			// 5, 4, 3, 2, 1 star options
-			// options as check boxes
+			$("#ratingsPanel").append("<input type='checkbox' checked> <label>5 stars</label><br>")
+			$("#ratingsPanel").append("<input type='checkbox' checked> <label>4 stars</label><br>")
+			$("#ratingsPanel").append("<input type='checkbox' checked> <label>3 stars</label><br>")
+			$("#ratingsPanel").append("<input type='checkbox' checked> <label>2 stars</label><br>")
+			$("#ratingsPanel").append("<input type='checkbox' checked> <label>1 stars</label><br>")
+
+			// Set up the event handler
+			$("#ratingsPanel input").change(function(){
+				filterDataPoits()
+			})
 		};
 
 
