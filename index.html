@@ -373,9 +373,13 @@
 			$("#locationPanel").append('<div class="sliderL" style="margin: 0px 5px 20px 10px;"></div>')
 
 			$(".sliderL").slider({
-				max: 30,
-				value: 15,
-				step: 5
+				max: 50,
+				value: 20,
+				step: 2,
+				slide: function(event, ui){
+					d3.select("#radius").attr("r", ui.value * 2)
+					filterDataPoits()
+				}
 			});
 			$(".sliderL").slider('pips');
 			$(".sliderL").slider('float');
