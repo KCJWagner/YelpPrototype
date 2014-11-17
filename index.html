@@ -57,18 +57,7 @@
 							<h3>Ratings</h3>
 							<div id="ratingsPanel"></div>
 							<h3>Features</h3>
-							<div id="featuresPanel">
-								<legend>Restaurant Features</legend>
-								<input type="checkbox" class="checkbox1"> <label>Accepts debit/credit</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Delivery</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Takes Reservations</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Wheelchair Accessible</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Good for Kids</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Good for Groups</label><br>
-								<input type="checkbox" class="checkbox1"> <label>19+ Only</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Fast Food</label><br>
-								<input type="checkbox" class="checkbox1"> <label>Organic/Locally Grown</label><br>
-							</div>
+							<div id="featuresPanel"></div>
 						</div>
 					</div>
 					<div id="results">Big list of results</div>
@@ -111,6 +100,7 @@
 		makeCostWidget()
 		makeCuisineWidget()
 		makeRatingsWidget()
+		makeFeaturesWidget()
 		$("#tabs").tabs();
 		$("#filterAccordion").accordion({
 			collapsible: true,
@@ -185,7 +175,20 @@
 			var radiusCircleR = radiusCircle.attr("r")
 			var priceRange = $(".slider").slider("values")
 			var desiredCuisines = $("#cuisinePanel > ul").tagit("assignedTags")
-			var desiredRating = {"1" : $("#ratingsPanel > input:eq(4)").is(":checked"), "2" : $("#ratingsPanel > input:eq(3)").is(":checked"), "3" : $("#ratingsPanel > input:eq(2)").is(":checked"), "4" : $("#ratingsPanel > input:eq(1)").is(":checked"), "5" : $("#ratingsPanel > input:eq(0)").is(":checked")}
+			var desiredRating = {"1" : $("#ratingsPanel > input:eq(4)").is(":checked"), 
+									"2" : $("#ratingsPanel > input:eq(3)").is(":checked"), 
+									"3" : $("#ratingsPanel > input:eq(2)").is(":checked"), 
+									"4" : $("#ratingsPanel > input:eq(1)").is(":checked"), 
+									"5" : $("#ratingsPanel > input:eq(0)").is(":checked")}
+			var desiredFeatures = {"Card" : $("#featuresPanel > input:eq(0)").is(":checked"), 
+									"Delivery" : $("#featuresPanel > input:eq(1)").is(":checked"), 
+									"Reservation" : $("#featuresPanel > input:eq(2)").is(":checked"), 
+									"Wheelchair" : $("#featuresPanel > input:eq(3)").is(":checked"), 
+									"Kids" : $("#featuresPanel > input:eq(4)").is(":checked"), 
+									"Group" : $("#featuresPanel > input:eq(5)").is(":checked"), 
+									"19+" : $("#featuresPanel > input:eq(6)").is(":checked"), 
+									"Fast" : $("#featuresPanel > input:eq(7)").is(":checked"), 
+									"Organic" : $("#featuresPanel > input:eq(8)").is(":checked")}
 			d3.select("svg")
 				.selectAll(".restaurant")
 					.data(restaurants)
@@ -215,6 +218,15 @@
 						return "0"
 					}
 
+					// Check if it has the right features
+					for (var feature in desiredFeatures){
+						if (desiredFeatures[feature]){
+							if (!d["Features"][feature]){
+								return "0"
+							}
+						}
+					}
+
 					return "1"
 				})
 				.attr("cx", function (d){
@@ -238,7 +250,20 @@
 			var radiusCircleR = radiusCircle.attr("r")
 			var priceRange = priceRange ? priceRange : $(".slider").slider("values")
 			var desiredCuisines = $("#cuisinePanel > ul").tagit("assignedTags")
-			var desiredRating = {"1" : $("#ratingsPanel > input:eq(4)").is(":checked"), "2" : $("#ratingsPanel > input:eq(3)").is(":checked"), "3" : $("#ratingsPanel > input:eq(2)").is(":checked"), "4" : $("#ratingsPanel > input:eq(1)").is(":checked"), "5" : $("#ratingsPanel > input:eq(0)").is(":checked")}
+			var desiredRating = {"1" : $("#ratingsPanel > input:eq(4)").is(":checked"), 
+									"2" : $("#ratingsPanel > input:eq(3)").is(":checked"), 
+									"3" : $("#ratingsPanel > input:eq(2)").is(":checked"), 
+									"4" : $("#ratingsPanel > input:eq(1)").is(":checked"), 
+									"5" : $("#ratingsPanel > input:eq(0)").is(":checked")}
+			var desiredFeatures = {"Card" : $("#featuresPanel > input:eq(0)").is(":checked"), 
+									"Delivery" : $("#featuresPanel > input:eq(1)").is(":checked"), 
+									"Reservation" : $("#featuresPanel > input:eq(2)").is(":checked"), 
+									"Wheelchair" : $("#featuresPanel > input:eq(3)").is(":checked"), 
+									"Kids" : $("#featuresPanel > input:eq(4)").is(":checked"), 
+									"Group" : $("#featuresPanel > input:eq(5)").is(":checked"), 
+									"19+" : $("#featuresPanel > input:eq(6)").is(":checked"), 
+									"Fast" : $("#featuresPanel > input:eq(7)").is(":checked"), 
+									"Organic" : $("#featuresPanel > input:eq(8)").is(":checked")}
 			d3.selectAll(".restaurant")
 				.data(restaurants)
 				.attr("fill-opacity", function(d){
@@ -263,6 +288,15 @@
 					// Check if it has the right amount of stars
 					if (!desiredRating[d["Rating"]]){
 						return "0"
+					}
+
+					// Check if it has the right features
+					for (var feature in desiredFeatures){
+						if (desiredFeatures[feature]){
+							if (!d["Features"][feature]){
+								return "0"
+							}
+						}
 					}
 
 					return "1"
@@ -342,13 +376,10 @@
 				max: 30,
 				value: 15,
 				step: 5
-				
 			});
 			$(".sliderL").slider('pips');
 			$(".sliderL").slider('float');
 		}
-			
-				
 
 		function makeRatingsWidget(){
 			makeWidgetLabel("ratingsPanel", "Customer Ratings")
@@ -362,6 +393,26 @@
 
 			// Set up the event handler
 			$("#ratingsPanel input").change(function(){
+				filterDataPoits()
+			})
+		};
+
+		function makeFeaturesWidget(){
+			makeWidgetLabel("featuresPanel", "Restaurant Features")
+
+			// Make the checkbox options
+			$("#featuresPanel").append("<input type='checkbox'> <label>Accepts debit/credit</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Delivery</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Takes Reservations</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Wheelchair Accessible</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Good for Kids</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Good for Groups</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>19+ Only</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Fast Food</label><br>")
+			$("#featuresPanel").append("<input type='checkbox'> <label>Organic/Locally Grown</label><br>")
+
+			// Set up the event handler
+			$("#featuresPanel input").change(function(){
 				filterDataPoits()
 			})
 		};
