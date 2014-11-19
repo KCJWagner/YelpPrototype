@@ -33,7 +33,10 @@
 	<table id="PageLayout" style="width:100%; height:100%;">
 		<tr height="15%">
 			<td width="300px">
-				<h1>Yelp</h1>
+				<!--<h1>Yelp</h1>-->
+				<div style="width:50%; height:50%">
+					<img id="YelpLogo" src="YelpLogo.png" style="border:0; position:absolute;">
+				</div>
 			</td>
 			<td>
 				Search: <input style="width:300px;" type="text">
@@ -65,7 +68,7 @@
 			</td>
 			<td>
 				<div style="width:100%; height:100%;">
-					<img src="MapPic.png" style="border:0; position:absolute;">
+					<img id="MapIMG" src="MapPic.png" style="border:0; position:absolute;">
 					<svg style="position:absolute;">
 					</svg>
 				</div>
@@ -76,24 +79,32 @@
 	<script>
 		var restaurants = []
 		var CuisineTypes = ["Indian", "Chinese", "Japanese", "Sushi", "Pizza", "Italian", "French", "Mexican"]
+		var selectedRestaurants = []
 
 		// Set up the map size
 		$( document ).ready(function() {
-			$("img").css("width", $("img").parent().width())
-			$("img").css("height", $("img").parent().height())
+			$("#YelpLogo").css("width", $("#YelpLogo").parent().width())
+			$("#YelpLogo").css("height", $("#YelpLogo").parent().height())
+
+			$("#MapIMG").css("width", $("#MapIMG").parent().width())
+			$("#MapIMG").css("height", $("#MapIMG").parent().height())
 			$("svg").css("width", $("svg").parent().width())
 			$("svg").css("height", $("svg").parent().height())
 			makeRadiusCircle()
 			generateData()
 			makeDataPoints() 
+			filterDataPoints()
 			displayResults()
 		});
 
 		$(window).resize(function(){
-			$("img").css("width", $("img").parent().width())
-			$("img").css("height", $("img").parent().height())
-			$("img").css("width", $("svg").parent().width())
-			$("img").css("height", $("svg").parent().height())
+			$("#YelpLogo").css("width", $("#YelpLogo").parent().width())
+			$("#YelpLogo").css("height", $("#YelpLogo").parent().height())
+
+			$("#MapIMG").css("width", $("#MapIMG").parent().width())
+			$("#MapIMG").css("height", $("#MapIMG").parent().height())
+			$("#MapIMG").css("width", $("svg").parent().width())
+			$("#MapIMG").css("height", $("svg").parent().height())
 		});
 
 		makeLocationSearchWidget()
@@ -244,6 +255,7 @@
 		}
 
 		function filterDataPoints(priceRange){
+			selectedRestaurants = []
 			var SVGWidthSteps = $("svg").width() / 100
 			var SVGHeightSteps = $("svg").height() / 100
 			var radiusCircle = d3.select("#radius")
@@ -301,8 +313,10 @@
 						}
 					}
 
+					selectedRestaurants.push(this);
 					return "1"
-				})
+				});
+			displayResults();
 		}
 
 		function makeWidgetLabel(panel, label){
@@ -346,11 +360,12 @@
 				afterTagAdded: function(){
 					filterDataPoints()
 				}
+
 			})
 		};
 
 		function makeLocationSearchWidget() {
-			makeWidgetLabel("locationPanel", "Where do you want to eat?")
+			makeWidgetLabel("locationPanel", "Where do you want to eat? (one area)")
 
 			//search bar
 			var locations = {"UBC" : [100, 100], 
@@ -438,19 +453,12 @@
 		};
 
 		function displayResults() {
+			$("#results").empty();
 
-			//testing displaying value of var
-			document.getElementById("#results").innerHTML = restaurants.length;
-			// this won't work either!
-			//document.getElementById("#results").innerHTML = "0";
-
-			
 			//displaying each restaurant 
-
-			//for (i=0; i=restaurants.length; i++) {
-				$("#results").append("<label>Restaurant </label>")
-				$("#results").append("<label>i </label>")
-			//}
+			for (i=0; i<selectedRestaurants.length; i++) {
+				$("#results").append("<div class='restInfo'>Restaurant " + (i + 1) + "</div>");
+			}
 		};
 
 
