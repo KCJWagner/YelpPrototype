@@ -60,7 +60,7 @@
 							<div id="featuresPanel"></div>
 						</div>
 					</div>
-					<div id="results">Big list of results</div>
+					<div id="results"></div>
 				</div>
 			</td>
 			<td>
@@ -85,7 +85,8 @@
 			$("svg").css("height", $("svg").parent().height())
 			makeRadiusCircle()
 			generateData()
-			makeDataPoints()
+			makeDataPoints() 
+			displayResults()
 		});
 
 		$(window).resize(function(){
@@ -101,6 +102,7 @@
 		makeCuisineWidget()
 		makeRatingsWidget()
 		makeFeaturesWidget()
+
 		$("#tabs").tabs();
 		$("#filterAccordion").accordion({
 			collapsible: true,
@@ -134,13 +136,13 @@
 					$("#radius").attr('cy', event.offsetY)
 
 					// Check to see what restaurants are in the circle
-					filterDataPoits()
+					filterDataPoints()
 				}
 			})
 			$('body').mouseup(function(event){
 				beingDragged = false
 			})
-		}
+		};
 
 		function generateData(){
 			// Generate data
@@ -164,7 +166,7 @@
 					restaurants.push(restaurant)
 				}
 			}
-		}
+		};
 
 		function makeDataPoints(){
 			var SVGWidthSteps = $("svg").width() / 100
@@ -235,13 +237,13 @@
 				.attr("cy", function (d){
 					return  SVGHeightSteps * d["Location"][1]
 				})
-				.attr("r", "1")
+				.attr("r", "2")
 				.attr("stroke", "red")
 				.attr("stroke-width", "0")
 				.attr("fill", "red")
 		}
 
-		function filterDataPoits(priceRange){
+		function filterDataPoints(priceRange){
 			var SVGWidthSteps = $("svg").width() / 100
 			var SVGHeightSteps = $("svg").height() / 100
 			var radiusCircle = d3.select("#radius")
@@ -320,7 +322,7 @@
 				step: 5,
 				values: [5, 20],
 				slide: function(event, ui){
-					filterDataPoits(ui.values)
+					filterDataPoints(ui.values)
 				}
 			});
 			$(".slider").slider('pips');
@@ -342,7 +344,7 @@
 					}
 				},
 				afterTagAdded: function(){
-					filterDataPoits()
+					filterDataPoints()
 				}
 			})
 		};
@@ -373,27 +375,29 @@
 				afterTagAdded: function(event, ui){
 					d3.select("#radius").attr("cx", locations[ui.tagLabel][0])
 					d3.select("#radius").attr("cy", locations[ui.tagLabel][1])
-					filterDataPoits()
+					filterDataPoints()
 				}
 			});
 		};
 
 		function makeLocationRadiusWidget() {
 			//radius slider bar
-			makeWidgetLabel("locationPanel", "Distance from Restaurant")
+			makeWidgetLabel("locationPanel", "All Restaurants within:")
 
 			$("#locationPanel").append('<div class="sliderL" style="margin: 0px 5px 20px 10px;"></div>')
 
+
 			$(".sliderL").slider({
-				max: 50,
-				value: 20,
-				step: 2,
+				min: 0,
+				max: 10,
+				value: 4,
+				step: 0.5,
 				slide: function(event, ui){
-					d3.select("#radius").attr("r", ui.value * 2)
-					filterDataPoits()
+					d3.select("#radius").attr("r", ui.value * 20)
+					filterDataPoints()
 				}
 			});
-			$(".sliderL").slider('pips');
+			$(".sliderL").slider('pips', {first: "label", suffix: "km"});
 			$(".sliderL").slider('float');
 		}
 
@@ -409,7 +413,7 @@
 
 			// Set up the event handler
 			$("#ratingsPanel input").change(function(){
-				filterDataPoits()
+				filterDataPoints()
 			})
 		};
 
@@ -429,8 +433,24 @@
 
 			// Set up the event handler
 			$("#featuresPanel input").change(function(){
-				filterDataPoits()
+				filterDataPoints()
 			})
+		};
+
+		function displayResults() {
+
+			//testing displaying value of var
+			document.getElementById("#results").innerHTML = restaurants.length;
+			// this won't work either!
+			//document.getElementById("#results").innerHTML = "0";
+
+			
+			//displaying each restaurant 
+
+			//for (i=0; i=restaurants.length; i++) {
+				$("#results").append("<label>Restaurant </label>")
+				$("#results").append("<label>i </label>")
+			//}
 		};
 
 
