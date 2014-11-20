@@ -63,7 +63,7 @@
 							<div id="featuresPanel"></div>
 						</div>
 					</div>
-					<div id="results"></div>
+					<div id="results" style="overflow-y: scroll; height:100px;"></div>
 				</div>
 			</td>
 			<td>
@@ -90,6 +90,7 @@
 			$("#MapIMG").css("height", $("#MapIMG").parent().height())
 			$("svg").css("width", $("svg").parent().width())
 			$("svg").css("height", $("svg").parent().height())
+			$("#results").css("height", $("svg").parent().height() - 100)
 			makeRadiusCircle()
 			generateData()
 			makeDataPoints() 
@@ -105,6 +106,7 @@
 			$("#MapIMG").css("height", $("#MapIMG").parent().height())
 			$("#MapIMG").css("width", $("svg").parent().width())
 			$("#MapIMG").css("height", $("svg").parent().height())
+			$("#results").css("height", $("svg").parent().height() - 100)
 		});
 
 		makeLocationSearchWidget()
