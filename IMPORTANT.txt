@@ -1,0 +1,15 @@
+
+RESULTS:
+- make results into pages or scroll bar
+- place drop-pin on dot of the restaurant that we're hovering over
+
+CUISINE:
+- not reloading all restaurants when you delete all cuisine tags
+
+LOCATION:
+- map circle to correct locations on the map
+- click the map to move the circle to that location
+
+BUTTONS:
+- Go/Search button @ bottom of filters tab
+- start-over button to start filters again
