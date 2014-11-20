@@ -179,6 +179,8 @@
 			}
 		};
 
+		
+
 		function makeDataPoints(){
 			var SVGWidthSteps = $("svg").width() / 100
 			var SVGHeightSteps = $("svg").height() / 100
@@ -313,7 +315,8 @@
 						}
 					}
 
-					selectedRestaurants.push(this);
+					//add restaurant to the array of selected restaurants
+					selectedRestaurants.push(d);
 					return "1"
 				});
 			displayResults();
@@ -405,7 +408,7 @@
 			$(".sliderL").slider({
 				min: 0,
 				max: 10,
-				value: 4,
+				value: 2,
 				step: 0.5,
 				slide: function(event, ui){
 					d3.select("#radius").attr("r", ui.value * 20)
@@ -455,11 +458,70 @@
 		function displayResults() {
 			$("#results").empty();
 
+
 			//displaying each restaurant 
 			for (i=0; i<selectedRestaurants.length; i++) {
-				$("#results").append("<div class='restInfo'>Restaurant " + (i + 1) + "</div>");
+				
+				// get string of restaurant features
+				var featOptions = ["Card","Delivery","Reservation","Wheelchair","Kids","Group","19+","Fast","Organic"];
+				var features = []
+				for (j=0; j<featOptions.length; j++) {
+					if (selectedRestaurants[i]["Features"][featOptions[j]] && true)
+						features.push(featOptions[j])
+				}
+
+				// and display it
+				$("#results").append("<div class='restDiv'><div class='restTitle'>Restaurant " + (i + 1) + "<br></div>" +
+										"<div class='restInfo'>Rating: " + selectedRestaurants[i]["Rating"] + "<br>" + 
+											"Cuisine: " + selectedRestaurants[i]["Cuisine"] + "<br>" +
+											"Avg Cost: $" + selectedRestaurants[i]["Cost"] + "/main<br>" +
+											"Features: " + features.toString() + "</div></div>");
+				
 			}
+			
+			// styling
+			d3.selectAll(".restTitle")
+				.style({
+					'font-size': '1.3em'
+				})
+
+			d3.selectAll(".restInfo")
+				.style({
+					'font-size': '0.8em',
+					'padding': '0px 0px 0px 10px'
+				})
+			
+			d3.selectAll(".restDiv")
+				.style({
+					'background-color': '#FFFFFF',
+					'border': '1px solid',
+					'border-color': '#c41200',
+					'border-radius': '5px',
+					'margin': '5px 0px 5px 0px',
+					'padding': '1px 5px 5px 5px'
+				})
+
+			d3.select(".restDiv")
+				.on('mouseover', function(d) {
+					d3.select(".restDiv")
+						.style({
+							'box-shadow': '0px 0px 8px #c41200'
+						})
+				})
+
+				.on('mouseout', function(d) {
+					d3.select(".restDiv")
+						.style({
+							'box-shadow': '0px 0px 0px #ccc'
+						})
+				})
+		
+			
+
 		};
+
+		// darker gray: #a8a8a8
+		// yelp red: #c41200
 
 
 	</script>

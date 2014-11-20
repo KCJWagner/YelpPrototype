@@ -1,7 +1,6 @@
 
 RESULTS:
-- display restaurant attributes
-- styling into separate divs to make them look like boxes/sections
+- make results into pages or scroll bar
 
 CUISINE:
 - not reloading all restaurants when you delete all cuisine tags
