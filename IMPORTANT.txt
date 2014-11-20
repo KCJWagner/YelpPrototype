@@ -8,6 +8,3 @@ CUISINE:
 LOCATION:
 - map circle to correct locations on the map
 - click the map to move the circle to that location
-
-BUTTONS:
-- start-over button to start filters again
