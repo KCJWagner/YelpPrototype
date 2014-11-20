@@ -1,6 +1,5 @@
 
 RESULTS:
-- make results into pages or scroll bar
 - place drop-pin on dot of the restaurant that we're hovering over
 
 CUISINE:
@@ -11,5 +10,4 @@ LOCATION:
 - click the map to move the circle to that location
 
 BUTTONS:
-- Go/Search button @ bottom of filters tab
 - start-over button to start filters again
