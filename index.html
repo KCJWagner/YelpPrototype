@@ -117,7 +117,10 @@
 		makeRatingsWidget()
 		makeFeaturesWidget()
 
-		$("#tabs").tabs();
+		$("#tabs").tabs({
+			collapsible: true,
+			active: 0
+		});
 		$("#filterAccordion").accordion({
 			collapsible: true,
 			heightStyle: "content"
@@ -154,7 +157,7 @@
 			})
 			.on('click', function(d) {
 				//follow link to results tab
-				
+				$("#tabs").tabs('option', 'active', 1);
 			})
 
 		function makeRadiusCircle(){
