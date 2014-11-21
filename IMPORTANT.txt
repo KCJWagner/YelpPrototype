@@ -5,8 +5,3 @@ RESULTS:
 
 CUISINE:
 - not reloading all restaurants when you delete all cuisine tags
-
-LOCATION:
-- map circle to correct locations on the map
-	link: http://www.kirupa.com/snippets/move_element_to_click_position.htm
-- click the map to move the circle to that location

@@ -454,12 +454,12 @@
 			makeWidgetLabel("locationPanel", "Where do you want to eat? (one area)")
 
 			//search bar
-			var locations = {"UBC" : [100, 100], 
-							"Point Grey" : [400, 225], 
-							"Kitsilano" : [410, 40], 
-							"Dunbar" : [325, 125], 
-							"Arbutus" : [410, 120], 
-							"Kerrisdale": [400, 225]}
+			var locations = {"UBC" : [10, 10], 
+							"Point Grey" : [50, 40], 
+							"Kitsilano" : [50, 10], 
+							"Dunbar" : [40, 50], 
+							"Arbutus" : [50, 55], 
+							"Kerrisdale": [45, 50]}
 			var options = Object.keys(locations)
 			$("#locationPanel").append("<ul></ul>")
 			$("#locationPanel > ul").tagit({
@@ -474,8 +474,9 @@
 					}
 				},
 				afterTagAdded: function(event, ui){
-					d3.select("#radius").attr("cx", locations[ui.tagLabel][0])
-					d3.select("#radius").attr("cy", locations[ui.tagLabel][1])
+					var SVGWidthSteps = $("svg").width() / 100
+					var SVGHeightSteps = $("svg").height() / 100
+					d3.select("#radius").attr("cx", locations[ui.tagLabel][0] * SVGWidthSteps).attr("cy", locations[ui.tagLabel][1] * SVGHeightSteps)
 					filterDataPoints()
 				}
 			});
