@@ -226,17 +226,15 @@
 					// Check to see what restaurants are in the circle
 					filterDataPoints()
 				}
-				
-			// $('svg').on('click', function(event){
-			// 	var pos = d3.mouse('svg:svg')
-			// 	console.log(pos[0]);
-			// 	$("#radius").attr('cx', event.pos[0])
-			// 	$("#radius").attr('cy', event.pos[1])
-			// })
-			
 			})
 			$('body').mouseup(function(event){
 				beingDragged = false
+			})
+
+			// Make the circle move to where the user clicks
+			$("svg").click(function(event){
+				$("#radius").attr('cx', event.offsetX).attr('cy', event.offsetY)
+				filterDataPoints()
 			})
 		};
 
