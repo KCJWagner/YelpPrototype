@@ -1,0 +1,14 @@
+sign ethics sheet
+Use coding sheet
+get the user to go through the task examples and take notes
+	-exploratory
+		-find a restaurant (help them out if they try something the prototype cant do)
+	-guided
+		-find a restaurant within 5km from dunbar
+		-~20$
+		-they want chinese or japanese
+		-not 1 stars
+		-accepts credit card
+		-pick one of the restaurants
+get them to fill out the questionair
+conduct interview
