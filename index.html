@@ -208,6 +208,7 @@
 				.attr("fill", "red")
 				.style("cursor", "move")
 				.style("z-index", "1")
+				.style("position", "relative")
 
 			// Set up the circle events
 			var beingDragged = false
@@ -225,6 +226,14 @@
 					// Check to see what restaurants are in the circle
 					filterDataPoints()
 				}
+				
+			// $('svg').on('click', function(event){
+			// 	var pos = d3.mouse('svg:svg')
+			// 	console.log(pos[0]);
+			// 	$("#radius").attr('cx', event.pos[0])
+			// 	$("#radius").attr('cy', event.pos[1])
+			// })
+			
 			})
 			$('body').mouseup(function(event){
 				beingDragged = false
