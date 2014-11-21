@@ -2,6 +2,3 @@
 RESULTS:
 - fix restaurant results highlighting so it highlights on EACH individual restaurant
 - place drop-pin on dot of the restaurant that we're hovering over
-
-CUISINE:
-- not reloading all restaurants when you delete all cuisine tags
