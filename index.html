@@ -421,9 +421,8 @@
 						return false
 					}
 				},
-				afterTagAdded: function(){
-					filterDataPoints()
-				}
+				afterTagAdded: filterDataPoints,
+				afterTagRemoved: filterDataPoints
 
 			})
 		};
