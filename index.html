@@ -346,7 +346,7 @@
 									"Organic" : $("#featuresPanel > input:eq(8)").is(":checked")}
 			d3.selectAll(".restaurant")
 				.data(restaurants)
-				.attr("fill-opacity", function(d){
+				.attr("fill-opacity", function(d, i){
 					// Check if it is in the radius
 					var delX = radiusCircleX - SVGWidthSteps * d["Location"][0]
 					var delY = radiusCircleY - SVGHeightSteps * d["Location"][1]
@@ -380,10 +380,26 @@
 					}
 
 					//add restaurant to the array of selected restaurants
-					d["point"] = this
+					d["point"] = i
 					selectedRestaurants.push(d);
 					return "1"
-				});
+				})
+				.on("mouseover", function(d, i){
+					if ($(this).attr("fill-opacity") == 1){
+						var divId = $(this).attr("id").replace("restaurant", "#restNum")
+						$(divId).css("box-shadow", '0px 0px 8px #c41200')
+
+						d3.select(this).transition().delay(100).attr("r", "5")
+					}
+				})
+				.on("mouseout", function(d, i){
+					if ($(this).attr("fill-opacity") == 1){
+						var divId = $(this).attr("id").replace("restaurant", "#restNum")
+						$(divId).css("box-shadow", '0px 0px 0px #ccc')
+
+						d3.select(this).transition().delay(100).attr("r", "2")
+					}
+				})
 			displayResults();
 		}
 
@@ -536,7 +552,7 @@
 				features = features.toString()
 
 				// and display it
-				$("#results").append("<div id='restNum" + i + "' class='restDiv'><div class='restTitle'>Restaurant " + (i + 1) + "<br></div>" +
+				$("#results").append("<div id='restNum" + selectedRestaurants[i]["point"] + "' class='restDiv'><div class='restTitle'>Restaurant " + (i + 1) + "<br></div>" +
 										"<div class='restInfo'>Rating: " + selectedRestaurants[i]["Rating"] + "<br>" + 
 											"Cuisine: " + selectedRestaurants[i]["Cuisine"] + "<br>" +
 											"Avg Cost: $" + selectedRestaurants[i]["Cost"] + "/main<br>" +
@@ -569,13 +585,13 @@
 			d3.selectAll(".restDiv")
 				.on('mouseover', function() {
 					$(this).css("box-shadow", '0px 0px 8px #c41200')
-					var circle = selectedRestaurants[$(this).attr("id").replace("restNum", "")]["point"]
-					d3.select(circle).transition().delay(100).attr("r", "5")
+					d3.select("#restaurant" + $(this).attr("id").replace("restNum", ""))
+						.transition().delay(100).attr("r", "5")
 				})
 				.on('mouseout', function() {
 					$(this).css("box-shadow", '0px 0px 0px #ccc')
-					var circle = selectedRestaurants[$(this).attr("id").replace("restNum", "")]["point"]
-					d3.select(circle).transition().delay(100).attr("r", "2")
+					d3.select("#restaurant" + $(this).attr("id").replace("restNum", ""))
+						.transition().delay(100).attr("r", "2")
 				})
 		};
 
