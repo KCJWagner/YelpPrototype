@@ -49,7 +49,7 @@
 						<li><a href="#filters">Filters</a></li>
 						<li><a href="#results">Results</a></li>
 					</ul>
-					<div id="filters">
+					<div id="filters" style="overflow-y:scroll;">
 						<div id="filterAccordion">
 							<h3>Location</h3>
 							<div id="locationPanel"></div>
@@ -62,10 +62,10 @@
 							<h3>Features</h3>
 							<div id="featuresPanel"></div>
 						</div>
-						<button id="seeResults">See Results</button>
-						<button id="startOver">Start Fresh</button>
+						<button id="seeResults" style="float:left; margin:10px; background-color:white; border:1px; border-color:#c41200; border-radius:5px; padding:5px;">See Results</button>
+						<button id="startOver" style="float:right; margin:10px; background-color:white; border:1px; border-color:#50AC33; border-radius:5px; padding:5px;">Start Fresh</button>
 					</div>
-					<div id="results" style="overflow:scroll; overflow-y:scroll !important; border: 1px solid; border-color: #bbb; border-radius: 3px; margin: 5px 0px 0px 0px"></div>
+					<div id="results" style="overflow-y:scroll !important; border: 1px solid; border-color: #bbb; border-radius: 3px; margin: 5px 0px 0px 0px"></div>
 				</div>
 			</td>
 			<td>
@@ -92,7 +92,7 @@
 			$("#MapIMG").css("height", $("#MapIMG").parent().height())
 			$("svg").css("width", $("svg").parent().width())
 			$("svg").css("height", $("svg").parent().height())
-			$("#results").css("height", ($("#MapIMG").parent().height()*0.85))
+			$("#results").css("height", $("svg").parent().height() - 100)
 			makeRadiusCircle()
 			generateData()
 			makeDataPoints() 
@@ -127,19 +127,8 @@
 			heightStyle: "content"
 		});
 
-		//See Results styling
-		d3.selectAll("#seeResults")
-			.style({
-				position: 'absolute',
-				bottom: 0,
-				right: 0,
-				margin: '0px 10px 10px 0px',
-				'background-color': '#FFFFFF',
-				'border': '1px solid',
-				'border-color': '#c41200',
-				'border-radius': '5px',
-				'padding': '5px'
-			})
+		// See Results styling
+		$("#seeResults")
 			.on('mouseover', function(d) {
 					d3.select("#seeResults")
 						.style({
@@ -161,19 +150,8 @@
 				$("#tabs").tabs('option', 'active', 1);
 			})
 
-			//Restart Search styling
-		d3.selectAll("#startOver")
-			.style({
-				position: 'absolute',
-				bottom: 0,
-				left: 0,
-				margin: '0px 0px 10px 10px',
-				'background-color': 'white',
-				'border': '1px solid',
-				'border-color': '#50AC33',
-				'border-radius': '5px',
-				'padding': '5px'
-			})
+		//Restart Search styling
+		$("#startOver")
 			.on('mouseover', function(d) {
 					d3.select("#startOver")
 						.style({
