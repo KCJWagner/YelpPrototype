@@ -62,8 +62,8 @@
 							<h3>Features</h3>
 							<div id="featuresPanel"></div>
 						</div>
-						<button id="seeResults" style="float:left; margin:10px; background-color:white; border:1px; border-color:#c41200; border-radius:5px; padding:5px;">See Results</button>
-						<button id="startOver" style="float:right; margin:10px; background-color:white; border:1px; border-color:#50AC33; border-radius:5px; padding:5px;">Start Fresh</button>
+						<button id="seeResults" style="float:right; margin:10px; background-color:white; border:1px; border-color:#c41200; border-radius:5px; padding:5px;">See Results</button>
+						<button id="startOver" style="float:left; margin:10px; background-color:white; border:1px; border-color:#50AC33; border-radius:5px; padding:5px;">Start Fresh</button>
 					</div>
 					<div id="results" style="overflow-y:scroll !important; border: 1px solid; border-color: #bbb; border-radius: 3px; margin: 5px 0px 0px 0px"></div>
 				</div>
@@ -441,9 +441,12 @@
 						return false
 					}
 				},
-				afterTagAdded: filterDataPoints,
-				afterTagRemoved: filterDataPoints
-
+				afterTagAdded: function(){
+					filterDataPoints()
+				},
+				afterTagRemoved: function(){
+					filterDataPoints()
+				}
 			})
 		};
 
